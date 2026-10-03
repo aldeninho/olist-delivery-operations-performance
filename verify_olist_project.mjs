@@ -1,0 +1,10 @@
+import fs from "node:fs/promises";
+import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
+const root = process.cwd();
+const metrics = JSON.parse(await fs.readFile(`${root}/data/processed/project_metrics.json`, "utf8"));
+if (metrics.total_orders !== 99441 || metrics.delivered_orders !== 96478) throw new Error("Unexpected Olist row counts");
+if (metrics.on_time_delivery_rate < 0 || metrics.on_time_delivery_rate > 1) throw new Error("Invalid on-time rate");
+const wb = await SpreadsheetFile.importXlsx(await FileBlob.load(`${root}/excel/operations_review.xlsx`));
+const dash = await wb.inspect({kind:"table",range:"Dashboard!A1:L14",include:"values,formulas",tableMaxRows:14,tableMaxCols:12,maxChars:12000});
+const errors = await wb.inspect({kind:"match",searchTerm:"#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A|#NUM!|#NULL!|#SPILL!|#CALC!",options:{useRegex:true,maxResults:50},maxChars:3000});
+console.log(JSON.stringify({dashboard:dash.ndjson,formulaErrors:errors.ndjson,validation:"passed"},null,2));

@@ -1,0 +1,12 @@
+{
+  "total_orders": 99441,
+  "delivered_orders": 96478,
+  "cancelled_orders": 625,
+  "cancellation_rate": 0.006285133898492574,
+  "on_time_delivery_rate": 0.9188830614233297,
+  "sla_breach_rate": 0.08111693857667032,
+  "avg_delivery_days": 12.558217098051975,
+  "freight_cost_per_delivered_order_brl": 22.785253011049146,
+  "on_time_avg_review": 4.294310676601906,
+  "late_avg_review": 2.566505678109907
+}

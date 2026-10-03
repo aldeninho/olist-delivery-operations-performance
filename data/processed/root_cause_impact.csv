@@ -1,0 +1,6 @@
+root_cause,affected_orders,sla_breaches,cancellations,fulfillment_cost_inr
+Vendor fulfillment delay,1438,1348,0,638187
+Regional last-mile disruption,1312,1168,0,571012
+Customer / payment cancellation,256,0,256,43187
+Address / serviceability,129,0,129,21715
+Inventory availability,122,0,122,20470

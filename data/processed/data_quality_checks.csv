@@ -1,0 +1,5 @@
+check,result
+Duplicate order IDs,0
+Delivered orders missing customer delivery timestamp,8
+Delivered orders missing estimated delivery date,0
+Orders with invalid delivery sequence,0
