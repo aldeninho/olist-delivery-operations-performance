@@ -1,0 +1,61 @@
+table 'Priority Segments'
+
+	column segment_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: segment_type
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		summarizeBy: none
+		sourceColumn: segment
+		annotation SummarizationSetBy = Automatic
+
+	column delivered_orders
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: delivered_orders
+		annotation SummarizationSetBy = Automatic
+
+	column late_orders
+		dataType: int64
+		summarizeBy: sum
+		sourceColumn: late_orders
+		annotation SummarizationSetBy = Automatic
+
+	column avg_late_days
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: avg_late_days
+		annotation SummarizationSetBy = Automatic
+
+	column avg_freight_brl
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: avg_freight_brl
+		annotation SummarizationSetBy = Automatic
+
+	column late_delivery_rate
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: late_delivery_rate
+		annotation SummarizationSetBy = Automatic
+
+	column excess_late_orders_vs_baseline
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: excess_late_orders_vs_baseline
+		annotation SummarizationSetBy = Automatic
+
+	partition default = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Asus/OneDrive/Documents/2nd data analayst project/data/processed/priority_segments.csv"),[Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"segment_type", type text}, {"segment", type text}, {"delivered_orders", Int64.Type}, {"late_orders", Int64.Type}, {"avg_late_days", type number}, {"avg_freight_brl", type number}, {"late_delivery_rate", type number}, {"excess_late_orders_vs_baseline", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table

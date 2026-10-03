@@ -1,0 +1,87 @@
+{
+  "name": "P3Cancelled",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 900,
+        "y": 100,
+        "z": 1000,
+        "width": 360,
+        "height": 260
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "lineChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "Fact Orders.purchase_month"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "Fact Orders.Cancellation Rate"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "Fact Orders",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "purchase_month"
+          },
+          "Name": "Fact Orders.purchase_month"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Cancellation Rate"
+          },
+          "Name": "Fact Orders.Cancellation Rate"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "vcObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Cancellation Rate Trend'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "name": "P1Monthly",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 40,
+        "y": 420,
+        "z": 1000,
+        "width": 760,
+        "height": 260
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "lineChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "Fact Orders.purchase_month"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "Fact Orders.On-Time Delivery %"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "Fact Orders",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "purchase_month"
+          },
+          "Name": "Fact Orders.purchase_month"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "On-Time Delivery %"
+          },
+          "Name": "Fact Orders.On-Time Delivery %"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "vcObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Monthly On-Time Delivery %'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

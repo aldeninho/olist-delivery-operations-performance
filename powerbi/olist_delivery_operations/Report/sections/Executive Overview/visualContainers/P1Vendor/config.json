@@ -1,0 +1,87 @@
+{
+  "name": "P1Vendor",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 830,
+        "y": 420,
+        "z": 1000,
+        "width": 420,
+        "height": 260
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "clusteredBarChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "Vendor Performance.vendor"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "Vendor Performance.Vendor On-Time Rate"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "v",
+          "Entity": "Vendor Performance",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "v"
+              }
+            },
+            "Property": "vendor"
+          },
+          "Name": "Vendor Performance.vendor"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "v"
+              }
+            },
+            "Property": "Vendor On-Time Rate"
+          },
+          "Name": "Vendor Performance.Vendor On-Time Rate"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "vcObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Vendor On-Time Rate'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

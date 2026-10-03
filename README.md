@@ -1,5 +1,7 @@
 # Olist Delivery Operations Performance
 
+**Stack: PostgreSQL | Python | Excel | Power BI**
+
 ## Executive summary
 
 This project analyzes real, anonymized Brazilian e-commerce data from Olist to identify delivery-performance priorities. Across 99,441 orders, 91.9% of delivered orders met the estimated delivery date. The SLA-breach rate was 8.1%, and late delivery corresponded to a much lower average review score (2.57 versus 4.29 for on-time orders).
@@ -22,6 +24,8 @@ Source: [Olist Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datas
 - `sql/00_schema.sql`, `01_build_fact_orders.sql`, `02_validate_and_analyze.sql`, `03_load_and_run.sql` — PostgreSQL setup, transformation, validation, analysis, and a full load-and-run script (validated end-to-end on PostgreSQL 16)
 - `excel/operations_review.xlsx` — management review workbook with dashboard and detail tabs
 - `powerbi/DAX_Measures.md` — import steps, DAX measures, and page specification
+- `powerbi/olist_delivery_operations/` — PBI Desktop source project (TMDL data model + PBIR report JSON) for the 3-page dashboard
+- `powerbi/olist_delivery_operations.pbit` — compiled Power BI template; open in Power BI Desktop, refresh against the local CSVs, then **Save As → .pbix** to embed cached data
 
 ## KPI definitions
 

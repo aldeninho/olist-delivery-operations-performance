@@ -1,0 +1,87 @@
+{
+  "name": "P2Dist",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 1060,
+        "y": 100,
+        "z": 1000,
+        "width": 200,
+        "height": 280
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "columnChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "Fact Orders.delivery_days_bucket"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "Fact Orders.Total Orders"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "Fact Orders",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "delivery_days_bucket"
+          },
+          "Name": "Fact Orders.delivery_days_bucket"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Total Orders"
+          },
+          "Name": "Fact Orders.Total Orders"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "vcObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Delivery-Day Distribution'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

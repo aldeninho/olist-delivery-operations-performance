@@ -1,0 +1,176 @@
+table 'Fact Orders'
+
+	column order_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: order_id
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: order_status
+		annotation SummarizationSetBy = Automatic
+
+	column order_purchase_timestamp
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: order_purchase_timestamp
+		annotation SummarizationSetBy = Automatic
+
+	column order_approved_at
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: order_approved_at
+		annotation SummarizationSetBy = Automatic
+
+	column order_delivered_carrier_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: order_delivered_carrier_date
+		annotation SummarizationSetBy = Automatic
+
+	column order_delivered_customer_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: order_delivered_customer_date
+		annotation SummarizationSetBy = Automatic
+
+	column order_estimated_delivery_date
+		dataType: dateTime
+		summarizeBy: none
+		sourceColumn: order_estimated_delivery_date
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_month
+		dataType: string
+		summarizeBy: none
+		sourceColumn: purchase_month
+		annotation SummarizationSetBy = Automatic
+
+	column customer_city
+		dataType: string
+		summarizeBy: none
+		sourceColumn: customer_city
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		summarizeBy: none
+		sourceColumn: customer_state
+		annotation SummarizationSetBy = Automatic
+
+	column order_value_brl
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: order_value_brl
+		annotation SummarizationSetBy = Automatic
+
+	column freight_cost_brl
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: freight_cost_brl
+		annotation SummarizationSetBy = Automatic
+
+	column item_count
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: item_count
+		annotation SummarizationSetBy = Automatic
+
+	column seller_count
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: seller_count
+		annotation SummarizationSetBy = Automatic
+
+	column primary_category
+		dataType: string
+		summarizeBy: none
+		sourceColumn: primary_category
+		annotation SummarizationSetBy = Automatic
+
+	column review_score
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: review_score
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_days
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: delivery_days
+		annotation SummarizationSetBy = Automatic
+
+	column estimated_delivery_days
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: estimated_delivery_days
+		annotation SummarizationSetBy = Automatic
+
+	column late_delivery_days
+		dataType: double
+		summarizeBy: sum
+		sourceColumn: late_delivery_days
+		annotation SummarizationSetBy = Automatic
+
+	column sla_breach
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sla_breach
+		annotation SummarizationSetBy = Automatic
+
+	column data_quality_flag
+		dataType: string
+		summarizeBy: none
+		sourceColumn: data_quality_flag
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_days_bucket
+		dataType: double
+		summarizeBy: none
+		sourceColumn: delivery_days_bucket
+		annotation SummarizationSetBy = Automatic
+
+	partition default = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Asus/OneDrive/Documents/2nd data analayst project/data/processed/fact_orders.csv"),[Delimiter=",", Columns=21, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"order_id", type text}, {"order_status", type text}, {"order_purchase_timestamp", type datetime}, {"order_approved_at", type datetime}, {"order_delivered_carrier_date", type datetime}, {"order_delivered_customer_date", type datetime}, {"order_estimated_delivery_date", type datetime}, {"purchase_month", type text}, {"customer_city", type text}, {"customer_state", type text}, {"order_value_brl", type number}, {"freight_cost_brl", type number}, {"item_count", type number}, {"seller_count", type number}, {"primary_category", type text}, {"review_score", type number}, {"delivery_days", type number}, {"estimated_delivery_days", type number}, {"late_delivery_days", type number}, {"sla_breach", type text}, {"data_quality_flag", type text}}),
+				    #"Added delivery_days_bucket" = Table.AddColumn(#"Changed Type", "delivery_days_bucket", each try Number.Floor([delivery_days]/5)*5 otherwise null, type number)
+				in
+				    #"Added delivery_days_bucket"
+
+	annotation PBI_ResultType = Table
+
+	measure 'Total Orders' = COUNTROWS('Fact Orders')
+		formatString: 0
+
+	measure 'Delivered Orders' = CALCULATE([Total Orders], 'Fact Orders'[order_status] = "delivered")
+		formatString: 0
+
+	measure 'Cancelled Orders' = CALCULATE([Total Orders], 'Fact Orders'[order_status] = "canceled")
+		formatString: 0
+
+	measure 'Cancellation Rate' = DIVIDE([Cancelled Orders], [Total Orders])
+		formatString: 0.0%
+
+	measure 'On-Time Deliveries' = CALCULATE([Delivered Orders], 'Fact Orders'[sla_breach] = "No")
+		formatString: 0
+
+	measure 'On-Time Delivery %' = DIVIDE([On-Time Deliveries], [Delivered Orders])
+		formatString: 0.0%
+
+	measure 'SLA Breaches' = CALCULATE([Delivered Orders], 'Fact Orders'[sla_breach] = "Yes")
+		formatString: 0
+
+	measure 'SLA Breach Rate' = DIVIDE([SLA Breaches], [Delivered Orders])
+		formatString: 0.0%
+
+	measure 'Average Delivery Days' = AVERAGEX(FILTER('Fact Orders', 'Fact Orders'[order_status] = "delivered"), 'Fact Orders'[delivery_days])
+		formatString: 0.0
+
+	measure 'Freight Cost per Delivered Order' = DIVIDE(CALCULATE(SUM('Fact Orders'[freight_cost_brl]), 'Fact Orders'[order_status] = "delivered"), [Delivered Orders])
+		formatString: 0.00

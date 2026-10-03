@@ -1,0 +1,87 @@
+{
+  "name": "P3CatFreight",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 480,
+        "y": 100,
+        "z": 1000,
+        "width": 380,
+        "height": 260
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "clusteredColumnChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "Fact Orders.primary_category"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "Fact Orders.Freight Cost per Delivered Order"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "Fact Orders",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "primary_category"
+          },
+          "Name": "Fact Orders.primary_category"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Freight Cost per Delivered Order"
+          },
+          "Name": "Fact Orders.Freight Cost per Delivered Order"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "vcObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Freight Cost per Delivered Order by Category'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

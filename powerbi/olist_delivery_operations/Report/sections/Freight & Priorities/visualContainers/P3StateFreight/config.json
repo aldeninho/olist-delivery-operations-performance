@@ -1,0 +1,87 @@
+{
+  "name": "P3StateFreight",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 40,
+        "y": 100,
+        "z": 1000,
+        "width": 400,
+        "height": 260
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "clusteredBarChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "Fact Orders.customer_state"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "Fact Orders.Freight Cost per Delivered Order"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "Fact Orders",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "customer_state"
+          },
+          "Name": "Fact Orders.customer_state"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "Freight Cost per Delivered Order"
+          },
+          "Name": "Fact Orders.Freight Cost per Delivered Order"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "vcObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Freight Cost per Delivered Order by Customer State'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

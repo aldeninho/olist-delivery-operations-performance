@@ -1,0 +1,87 @@
+{
+  "name": "P2State",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 40,
+        "y": 100,
+        "z": 1000,
+        "width": 480,
+        "height": 280
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "clusteredColumnChart",
+    "projections": {
+      "Category": [
+        {
+          "queryRef": "Fact Orders.customer_state"
+        }
+      ],
+      "Y": [
+        {
+          "queryRef": "Fact Orders.SLA Breach Rate"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "f",
+          "Entity": "Fact Orders",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "customer_state"
+          },
+          "Name": "Fact Orders.customer_state"
+        },
+        {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "f"
+              }
+            },
+            "Property": "SLA Breach Rate"
+          },
+          "Name": "Fact Orders.SLA Breach Rate"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true,
+    "vcObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'SLA Breach Rate by Customer State'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

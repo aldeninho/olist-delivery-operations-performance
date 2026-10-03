@@ -1,0 +1,105 @@
+{
+  "name": "P3Segments",
+  "layouts": [
+    {
+      "id": 0,
+      "position": {
+        "x": 40,
+        "y": 390,
+        "z": 1000,
+        "width": 700,
+        "height": 300
+      }
+    }
+  ],
+  "singleVisual": {
+    "visualType": "tableEx",
+    "projections": {
+      "Values": [
+        {
+          "queryRef": "Priority Segments.segment_type"
+        },
+        {
+          "queryRef": "Priority Segments.segment"
+        },
+        {
+          "queryRef": "Priority Segments.delivered_orders"
+        },
+        {
+          "queryRef": "Priority Segments.late_orders"
+        },
+        {
+          "queryRef": "Priority Segments.late_delivery_rate"
+        }
+      ]
+    },
+    "prototypeQuery": {
+      "Version": 2,
+      "From": [
+        {
+          "Name": "p",
+          "Entity": "Priority Segments",
+          "Type": 0
+        }
+      ],
+      "Select": [
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "p"
+              }
+            },
+            "Property": "segment_type"
+          },
+          "Name": "Priority Segments.segment_type"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "p"
+              }
+            },
+            "Property": "segment"
+          },
+          "Name": "Priority Segments.segment"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "p"
+              }
+            },
+            "Property": "delivered_orders"
+          },
+          "Name": "Priority Segments.delivered_orders"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "p"
+              }
+            },
+            "Property": "late_orders"
+          },
+          "Name": "Priority Segments.late_orders"
+        },
+        {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Source": "p"
+              }
+            },
+            "Property": "late_delivery_rate"
+          },
+          "Name": "Priority Segments.late_delivery_rate"
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
