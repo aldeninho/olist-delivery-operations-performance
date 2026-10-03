@@ -1,0 +1,11 @@
+{
+  "delivered_orders": 96478,
+  "late_orders": 7826,
+  "late_order_value_brl": 1158920.51,
+  "late_freight_cost_brl": 192704.45,
+  "late_order_value_share_of_delivered": 0.0877,
+  "late_freight_share_of_delivered": 0.0877,
+  "avg_review_score_late": 2.57,
+  "avg_review_score_on_time": 4.29,
+  "review_score_gap_late_vs_on_time": 1.73
+}

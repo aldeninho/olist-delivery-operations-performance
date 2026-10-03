@@ -36,15 +36,16 @@ FACT_ORDERS_COLUMNS = [
     ("data_quality_flag", "text", "text"),
 ]
 
-VENDOR_COLUMNS = [
-    ("vendor", "text", "text"),
+SELLER_COLUMNS = [
+    ("seller_id", "text", "text"),
     ("total_orders", "Int64.Type", "int64"),
     ("delivered_orders", "Int64.Type", "int64"),
-    ("cancellation_rate", "type number", "number"),
-    ("on_time_rate", "type number", "number"),
-    ("sla_breach_rate", "type number", "number"),
+    ("cancelled_orders", "Int64.Type", "int64"),
+    ("on_time_delivery_pct", "type number", "number"),
+    ("sla_breach_pct", "type number", "number"),
     ("avg_delivery_days", "type number", "number"),
-    ("cost_per_delivered_order_inr", "type number", "number"),
+    ("freight_cost_per_delivered_order_brl", "type number", "number"),
+    ("avg_review_score", "type number", "number"),
 ]
 
 SEGMENTS_COLUMNS = [
@@ -71,11 +72,12 @@ FACT_MEASURES = [
     ("Freight Cost per Delivered Order", "DIVIDE(CALCULATE(SUM('Fact Orders'[freight_cost_brl]), 'Fact Orders'[order_status] = \"delivered\"), [Delivered Orders])", "0.00"),
 ]
 
-VENDOR_MEASURES = [
-    ("Total Vendor Orders", "SUM('Vendor Performance'[total_orders])", "0"),
-    ("Vendor On-Time Rate", "AVERAGE('Vendor Performance'[on_time_rate])", "0.0%"),
-    ("Vendor SLA Breach Rate", "AVERAGE('Vendor Performance'[sla_breach_rate])", "0.0%"),
-    ("Vendor Avg Delivery Days", "AVERAGE('Vendor Performance'[avg_delivery_days])", "0.0"),
+SELLER_MEASURES = [
+    ("Total Seller Orders", "SUM('Seller Performance'[total_orders])", "0"),
+    ("Seller On-Time Rate", "AVERAGE('Seller Performance'[on_time_delivery_pct])", "0.0%"),
+    ("Seller SLA Breach Rate", "AVERAGE('Seller Performance'[sla_breach_pct])", "0.0%"),
+    ("Seller Avg Delivery Days", "AVERAGE('Seller Performance'[avg_delivery_days])", "0.0"),
+    ("Seller Avg Review Score", "AVERAGE('Seller Performance'[avg_review_score])", "0.00"),
 ]
 
 
@@ -204,7 +206,7 @@ def build_model():
         FACT_MEASURES,
         extra_add_columns=[('try Number.Floor([delivery_days]/5)*5 otherwise null', "delivery_days_bucket")],
     )
-    write_table(os.path.join(model_dir, "tables"), "Vendor Performance", VENDOR_COLUMNS, "vendor_performance.csv", VENDOR_MEASURES)
+    write_table(os.path.join(model_dir, "tables"), "Seller Performance", SELLER_COLUMNS, "seller_performance.csv", SELLER_MEASURES)
     write_table(os.path.join(model_dir, "tables"), "Priority Segments", SEGMENTS_COLUMNS, "priority_segments.csv", [])
 
 
@@ -356,8 +358,8 @@ def build_report():
     line_members = [col_ref("Fact Orders", "purchase_month"), cmember if False else None]
     line_members = [col_ref("Fact Orders", "purchase_month"), meas("Fact Orders", "On-Time Delivery %")]
     visuals.append(data_visual("lineChart", "P1Monthly", 40, 420, 760, 260, "Fact Orders", line_members, title="Monthly On-Time Delivery %"))
-    vendor_members = [col_ref("Vendor Performance", "vendor"), meas("Vendor Performance", "Vendor On-Time Rate")]
-    visuals.append(data_visual("clusteredBarChart", "P1Vendor", 830, 420, 420, 260, "Vendor Performance", vendor_members, title="Vendor On-Time Rate"))
+    seller_members = [col_ref("Seller Performance", "seller_id"), meas("Seller Performance", "Seller On-Time Rate")]
+    visuals.append(data_visual("clusteredBarChart", "P1Seller", 830, 420, 420, 260, "Seller Performance", seller_members, title="Seller On-Time Rate"))
     visuals.append(textbox_visual("P1Title", 40, 40, 900, 70, f"Olist Delivery Operations Performance", size=28, bold=True))
     visuals.append(textbox_visual("P1Reco", 40, 375 - 372 if False else 80, 500, 60, "Actions: investigate late routes in RJ, review carrier handoffs, audit freight anomalies.", size=12))
     pages.append(("Executive Overview", "Executive Overview", visuals))
@@ -366,7 +368,7 @@ def build_report():
     visuals = []
     l2 = [
         data_visual("clusteredColumnChart", "P2State", 40, 100, 480, 280, "Fact Orders", [col_ref("Fact Orders", "customer_state"), meas("Fact Orders", "SLA Breach Rate")], title="SLA Breach Rate by Customer State"),
-        data_visual("clusteredBarChart", "P2Vendor", 560, 100, 460, 280, "Vendor Performance", [col_ref("Vendor Performance", "vendor"), meas("Vendor Performance", "Vendor SLA Breach Rate")], title="SLA Breach Rate by Vendor"),
+        data_visual("clusteredBarChart", "P2Seller", 560, 100, 460, 280, "Seller Performance", [col_ref("Seller Performance", "seller_id"), meas("Seller Performance", "Seller SLA Breach Rate")], title="SLA Breach Rate by Seller"),
         data_visual("columnChart", "P2Dist", 1060, 100, 200 if False else 200, 280, "Fact Orders", [col_ref("Fact Orders", "delivery_days_bucket"), meas("Fact Orders", "Total Orders")], title="Delivery-Day Distribution"),
     ]
     for x0, y0, w, h, vis in [(40, 100, 480, 280, None)]:
@@ -374,7 +376,7 @@ def build_report():
     visuals = l2
     visuals.append(slicer_visual("P2SliceMonth", "Fact Orders", "purchase_month", 40, 410, 250, 60, title="Month"))
     visuals.append(slicer_visual("P2SliceState", "Fact Orders", "customer_state", 300, 410, 250, 60, title="Customer state"))
-    visuals.append(slicer_visual("P2SliceVendor", "Vendor Performance", "vendor", 560, 410, 250, 60, title="Vendor"))
+    visuals.append(slicer_visual("P2SliceSeller", "Seller Performance", "seller_id", 560, 410, 250, 60, title="Seller"))
     visuals.append(slicer_visual("P2SliceCat", "Fact Orders", "primary_category", 820, 410, 250, 60, title="Category"))
     visuals.append(textbox_visual("P2Title", 40, 40, 900, 70, "Delivery & SLA", size=28, bold=True))
     pages.append(("Delivery & SLA", "Delivery and SLA", visuals))
